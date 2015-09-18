@@ -1,0 +1,4 @@
+[root]
+name = "socket-consumer"
+version = "0.1.0"
+

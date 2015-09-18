@@ -1,0 +1,4 @@
+[root]
+name = "pipe-consumer"
+version = "0.1.0"
+
