@@ -2,3 +2,6 @@
 name = "socket-producer"
 version = "0.1.0"
 authors = ["Nathan Jent <nathanjent@gmail.com>"]
+
+[dependencies]
+rand = "0.3.11"
