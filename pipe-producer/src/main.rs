@@ -14,7 +14,7 @@ fn main() {
     let mut rng = rand::thread_rng();
     {
         let mut writer = BufWriter::new(f);
-        let mut child = Command::new("pipe-consumer.exe")
+        let mut child = Command::new("./pipe-consumer")
             .stdin(Stdio::piped())
             .spawn()
             .unwrap_or_else(|e| 
