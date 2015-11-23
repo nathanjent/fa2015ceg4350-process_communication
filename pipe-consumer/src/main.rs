@@ -9,8 +9,10 @@ fn main() {
             .ok()
             .expect("Failed to create file.");
     let mut writer = LineWriter::new(f);
-    io::stdin().read_line(&mut data).unwrap();
-    writer.write(data.as_bytes())
-    	.ok()
-        .expect("Failed to write to file.");
+    {
+        io::stdin().read_line(&mut data).unwrap();
+        writer.write(data.as_bytes())
+                .ok()
+                .expect("Failed to write to file.");
+    }
 }
