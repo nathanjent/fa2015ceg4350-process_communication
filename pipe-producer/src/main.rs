@@ -7,7 +7,7 @@ use std::io::prelude::*;
 use std::fs::File;
 
 fn main() {
-    let f = File::create("producer_out.txt")
+    let f = File::create("pipe_producer_out.txt")
             .ok()
             .expect("Failed to create file.");
     let r = Range::new(0, 100);
