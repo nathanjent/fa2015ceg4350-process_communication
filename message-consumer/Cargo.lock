@@ -1,0 +1,4 @@
+[root]
+name = "message-consumer"
+version = "0.1.0"
+

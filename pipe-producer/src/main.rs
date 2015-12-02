@@ -7,14 +7,14 @@ use std::io::prelude::*;
 use std::fs::File;
 
 fn main() {
-    let f = File::create("producer_out.txt")
+    let f = File::create("pipe_producer_out.txt")
             .ok()
             .expect("Failed to create file.");
     let r = Range::new(0, 100);
     let mut rng = rand::thread_rng();
     {
         let mut writer = BufWriter::new(f);
-        let mut child = Command::new("pipe-consumer.exe")
+        let mut child = Command::new("./pipe-consumer")
             .stdin(Stdio::piped())
             .spawn()
             .unwrap_or_else(|e| 

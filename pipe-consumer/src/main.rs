@@ -5,7 +5,7 @@ use std::fs::File;
 
 fn main() {
     let mut data = String::new(); 
-    let f = File::create("consumer_in.txt")
+    let f = File::create("pipe_consumer_in.txt")
             .ok()
             .expect("Failed to create file.");
     let mut writer = LineWriter::new(f);

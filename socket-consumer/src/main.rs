@@ -1,25 +1,26 @@
 use std::net::{TcpListener,TcpStream};
 use std::thread;
-use std::io::LineWriter;
+use std::io::BufWriter;
 use std::io::prelude::*;
 use std::fs::File;
 
 fn handle_client(mut stream: TcpStream) {
-    //let _ = stream.write(&[1]);
-
-    //let _ = stream.read(&mut [0; 128]);
-    let mut data = String::new(); 
-    let file = File::create("consumer_in.txt")
+    let mut in_buf = [0; 10];
+    let f = File::create("socket_consumer_in.txt")
             .ok()
             .expect("Failed to create file.");
-    let mut file = LineWriter::new(file); 
-    
-    stream.read_to_string(&mut data)
-        .ok()
-        .expect("Failed to read socket.");
-    file.write(data.as_bytes())
+    let mut fw = BufWriter::new(f); 
+    loop {
+        stream.read(&mut in_buf)
+            .ok()
+            .expect("Failed to read socket.");
+        fw.write(&in_buf)
             .ok()
             .expect("Failed to write to file.");
+        stream.write(&mut in_buf)
+            .ok()
+            .expect("Failed to write to socket.");
+    }
 }
 
 fn main() {
@@ -34,7 +35,7 @@ fn main() {
                     handle_client(stream);
                 });
             }
-            Err(e) => { /* connection failed */ }
+            Err(e) => {/* connection failed */ }
         }
     }
 
