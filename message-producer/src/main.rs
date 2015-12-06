@@ -13,10 +13,18 @@ fn main() {
         .expect("Failed to create file.");
     let mut fcw = BufWriter::new(fc);
     let (tx, rx) = channel();
-    let r = Range::new(0, 100);
-    let mut rng = rand::thread_rng();
-    let tx_buf = [r.ind_sample(&mut rng); 100];
+
+    // spawn separate process
     thread::spawn(move || {
+        // fill array with random integers
+        let r = Range::new(0, 100);
+        let mut rng = rand::thread_rng();
+        let tx_buf = [r.ind_sample(&mut rng); 100];
+
+        let child_tx = tx.clone();
+        for x in tx_buf.iter() {
+            child_tx.send(x).unwrap();
+        }
         let fp = File::create("message_producer_out.txt")
             .ok()
             .expect("Failed to create file.");
@@ -24,10 +32,9 @@ fn main() {
         fpw.write(&tx_buf[..])
             .ok()
             .expect("Failed to write to file.");
-        for x in tx_buf.iter() {
-            tx.send(x).unwrap();
-        }
     });
+
+    // read channel
     let rx_buf = &mut [0u8; 100];
     for item in rx_buf.iter_mut() {
         *item = *rx.recv().unwrap();

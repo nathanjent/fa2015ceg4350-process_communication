@@ -5,12 +5,12 @@ use std::io::prelude::*;
 use std::fs::File;
 
 fn handle_client(mut stream: TcpStream) {
-    let mut in_buf = [0; 10];
     let f = File::create("socket_consumer_in.txt")
             .ok()
             .expect("Failed to create file.");
     let mut fw = BufWriter::new(f); 
     loop {
+        let mut in_buf = [0; 10];
         stream.read(&mut in_buf)
             .ok()
             .expect("Failed to read socket.");
@@ -35,7 +35,7 @@ fn main() {
                     handle_client(stream);
                 });
             }
-            Err(e) => {/* connection failed */ }
+            Err(e) => {print!("{}", e); /* connection failed */ }
         }
     }
 
