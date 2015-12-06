@@ -11,9 +11,14 @@ fn handle_client(mut stream: TcpStream) {
     let mut fw = BufWriter::new(f); 
     loop {
         let mut in_buf = [0; 10];
-        stream.read(&mut in_buf)
-            .ok()
-            .expect("Failed to read socket.");
+        match stream.read(&mut in_buf) {
+            Ok(in_buf_size) => {
+                if in_buf_size == 0 { break; }
+            }
+            Err(e) => {
+                print!("Failed to read socket. {}", e); 
+            }
+        }
         fw.write(&in_buf)
             .ok()
             .expect("Failed to write to file.");
