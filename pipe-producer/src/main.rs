@@ -11,7 +11,7 @@ fn main() {
         .ok()
         .expect("Failed to create file.");
     let mut writer = BufWriter::new(f);
-    let r = Range::new(0, 100);
+    let r = Range::new(0x21, 0x7E);
     let mut rng = rand::thread_rng();
     let out_buf = &mut [0u8; 100];
     for item in out_buf.iter_mut() {

@@ -23,7 +23,7 @@ fn main() {
             .expect("Failed to create file.");
         let mut fpw = BufWriter::new(fp); 
 
-        let r = Range::new(0, 100);
+        let r = Range::new(0x21, 0x7E);
         let mut rng = rand::thread_rng();
         let tx_buf = &mut [0u8; 100];
         let child_tx = tx.clone();

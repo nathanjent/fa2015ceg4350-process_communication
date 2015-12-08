@@ -13,7 +13,7 @@ fn main() {
     let mut fw = BufWriter::new(f); 
 
     // fill array with random bytes
-    let r = Range::new(0, 255);
+    let r = Range::new(0x21, 0x7E);
     let mut rng = rand::thread_rng();
     let out_buf = &mut [0u8; 100];
     for item in out_buf.iter_mut() {

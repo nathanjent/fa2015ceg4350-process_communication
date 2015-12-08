@@ -10,8 +10,8 @@ use std::thread;
 
 
 fn main() {
-    let shared_buf = &mut [0; 10];
-    let atomic_buf = AtomicPtr::new(shared_buf);
+    let buf: Vec<_> = (0..100u32).collect();
+    let shared_buf = Arc::new(buf);
 
     let fp = File::create("sharedmem_producer_out.txt")
         .ok()
