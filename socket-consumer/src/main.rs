@@ -10,21 +10,28 @@ fn handle_client(mut stream: TcpStream) {
             .expect("Failed to create file.");
     let mut fw = BufWriter::new(f); 
     loop {
-        let mut in_buf = [0; 10];
-        match stream.read(&mut in_buf) {
-            Ok(in_buf_size) => {
-                if in_buf_size == 0 { break; }
+        let mut count = 0;
+        let mut in_buf = [0u8; 10];
+        while count < 10 {
+            match stream.read(&mut in_buf) {
+                Ok(read_size) => {
+                    count += read_size as u8;
+                    print!("in={} ", count);
+                }
+                Err(e) => {
+                    print!("Failed to read socket. {}", e); 
+                }
             }
-            Err(e) => {
-                print!("Failed to read socket. {}", e); 
+            let count_buf = [count];
+            stream.write(&count_buf[..])
+                .ok()
+                .expect("Failed to write to socket.");
+            if count > 0 {
+                fw.write(&mut in_buf[..])
+                    .ok()
+                    .expect("Failed to write to file.");
             }
         }
-        fw.write(&in_buf)
-            .ok()
-            .expect("Failed to write to file.");
-        stream.write(&mut in_buf)
-            .ok()
-            .expect("Failed to write to socket.");
     }
 }
 

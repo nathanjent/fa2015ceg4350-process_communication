@@ -23,26 +23,29 @@ fn main() {
             .expect("Failed to create file.");
         let mut fpw = BufWriter::new(fp); 
 
-        let r = Range::new(0x21, 0x7E);
+        let r = Range::new(0i32, 9);
         let mut rng = rand::thread_rng();
-        let tx_buf = &mut [0u8; 100];
+        let tx_buf = &mut [0i32; 100];
         let child_tx = tx.clone();
         for item in tx_buf.iter_mut() {
             let x = r.ind_sample(&mut rng);
-            child_tx.send(x).unwrap();
+            child_tx.send(x as u8).unwrap();
             *item = x;
-        }
-        fpw.write(&tx_buf[..])
+            fpw.write_fmt(format_args!("{}", x))
             .ok()
             .expect("Failed to write to file.");
+        }
+        
     });
 
     // read channel
-    let rx_buf = &mut [0u8; 100];
+    let rx_buf = &mut [0i32; 100];
     for item in rx_buf.iter_mut() {
-        *item = rx.recv().unwrap();
+        *item = rx.recv().unwrap() as i32;
     }
-    fcw.write(&mut rx_buf[..])
-        .ok()
-        .expect("Failed to write to file.");
+    for x in rx_buf.iter() {
+        fcw.write_fmt(format_args!("{}", x))
+            .ok()
+            .expect("Failed to write to file.");
+    }
 }

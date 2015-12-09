@@ -11,9 +11,9 @@ fn main() {
         .ok()
         .expect("Failed to create file.");
     let mut writer = BufWriter::new(f);
-    let r = Range::new(0x21, 0x7E);
+    let r = Range::new(0i32, 9);
     let mut rng = rand::thread_rng();
-    let out_buf = &mut [0u8; 100];
+    let out_buf = &mut [0i32; 100];
     for item in out_buf.iter_mut() {
         *item = r.ind_sample(&mut rng);
     }
@@ -25,11 +25,13 @@ fn main() {
                 { panic!("failed to execute process: {}", e) });
 
         let child_in = child.stdin.as_mut().unwrap();
-        child_in.write(&mut out_buf[..])
-            .ok()
-            .expect("Failed to write to child process.");
-        writer.write(&mut out_buf[..])
-            .ok()
-            .expect("Failed to write to file.");
+        for out in out_buf.iter() {
+            child_in.write_fmt(format_args!("{}", out))
+                .ok()
+                .expect("Failed to write to child process.");
+            writer.write_fmt(format_args!("{}", out))
+                .ok()
+                .expect("Failed to write to file.");
+        }
     }
 }
