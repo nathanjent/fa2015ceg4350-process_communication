@@ -25,6 +25,7 @@ fn main() {
         let in_pos = 0;
 
         loop {
+            unsafe {
             sem.acquire();
 
             {
@@ -38,7 +39,8 @@ fn main() {
                     .expect("Failed to write to file.");
             }
             sem.release();
-        } // guard released here
+            }
+        }
     });
 
     let fc = File::create("sharedmem_consumer_in.txt")
@@ -48,6 +50,7 @@ fn main() {
     let out_pos = 0;
 
     loop {
+        unsafe {
         sem.acquire();
 
         {
@@ -60,6 +63,7 @@ fn main() {
             count -= 1;
         } // guard released here
         sem.release();
+        }
         recv_total += 1;
         if recv_total == 99 { break; }
     }
