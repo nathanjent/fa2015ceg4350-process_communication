@@ -25,12 +25,10 @@ fn main() {
 
         let r = Range::new(0i32, 9);
         let mut rng = rand::thread_rng();
-        let tx_buf = &mut [0i32; 100];
         let child_tx = tx.clone();
-        for item in tx_buf.iter_mut() {
+        for _ in 0..100 {
             let x = r.ind_sample(&mut rng);
             child_tx.send(x as u8).unwrap();
-            *item = x;
             fpw.write_fmt(format_args!("{}", x))
             .ok()
             .expect("Failed to write to file.");
