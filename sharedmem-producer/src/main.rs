@@ -1,5 +1,3 @@
-//#![feature(semaphore)]
-
 extern crate rand;
 
 use rand::distributions::{IndependentSample, Range};
@@ -32,7 +30,7 @@ fn main() {
             {
                 let _guard = sem.access();
                 let rand = r.ind_sample(&mut rng);
-                ring_buf[in_pos] = rand;
+                ring_buf[in_pos] = rand.clone();
                 in_pos = (in_pos + 1) % buf_size;
                 count += 1;
                 fwp.write_fmt(format_args!("{}", rand))
